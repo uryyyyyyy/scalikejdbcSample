@@ -1,4 +1,7 @@
-activator-akka-scala-seed
-=========================
+# sample
 
-A minimal seed template for an Akka with Scala build 
+## setup
+
+import setup.sql
+
+./acrivator "scalikejdbc-gen relation_article_tag"
