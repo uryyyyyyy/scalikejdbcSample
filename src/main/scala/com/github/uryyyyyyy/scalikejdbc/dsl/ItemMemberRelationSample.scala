@@ -42,11 +42,16 @@ object ItemMemberRelationSample {
 
     NamedDB(dbName).localTx { implicit session =>
 
-      val memberIds: Set[Long] = ItemMemberRelationDao.findMemberIds(ia.id)
-      println(memberIds)
+//      val memberIds: Set[Long] = ItemMemberRelationDao.findMemberIds(ia.id)
+//      println(memberIds)
+//
+//      val members: Set[Member] = ItemMemberRelationDao.findMembers(ia.id)
+//      println(members)
 
-      val members: Set[Member] = ItemMemberRelationDao.findMembers(ia.id)
-      println(members)
+      ItemDao.findAll().foreach(println)
+      println("start")
+      val items: Set[Item] = ItemMemberRelationDao.findItems(mb.id)
+      println(items)
     }
 
   }

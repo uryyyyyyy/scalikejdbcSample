@@ -13,9 +13,9 @@ case class Member(
 object MemberDao extends SQLSyntaxSupport[Member] {
   override val tableName = "members"
   override val columnNames = Seq("id", "name", "birthday", "created_at")
-  val m = MemberDao.syntax("m")
+  val alias = MemberDao.syntax("m")
 
-  def toModel(rs: WrappedResultSet): Member = autoConstruct(rs, m.resultName)
+  def toModel(rs: WrappedResultSet): Member = autoConstruct(rs, alias.resultName)
 
   def create(name: String, birthday: Option[LocalDate], createdAt: DateTime)(implicit session: DBSession): Member = {
     val id = applyUpdateAndReturnGeneratedKey {
@@ -43,34 +43,34 @@ object MemberDao extends SQLSyntaxSupport[Member] {
 
   def deleteById(id: Long)(implicit session: DBSession): Unit = {
     applyUpdate {
-      deleteFrom(this as m).where.eq(m.id, id)
+      deleteFrom(this as alias).where.eq(alias.id, id)
     }
   }
 
   def findById(id: Long)(implicit session: DBSession): Option[Member] = {
     withSQL {
-      selectFrom(this as m).where.eq(m.id, id)
+      selectFrom(this as alias).where.eq(alias.id, id)
     }.map(toModel(_))
       .single.apply()
   }
 
   def findAll()(implicit session: DBSession): Set[Member] = {
     withSQL {
-      selectFrom(this as m)
+      selectFrom(this as alias)
     }.map(toModel(_))
       .list().apply().toSet
   }
 
   def findAllOrderedById()(implicit session: DBSession): Seq[Member] = {
     withSQL {
-      selectFrom(this as m).orderBy(m.id)
+      selectFrom(this as alias).orderBy(alias.id)
     }.map(toModel(_))
       .list().apply()
   }
 
   def findByNames(names: Seq[String])(implicit session: DBSession): Seq[Member] = {
     withSQL {
-      selectFrom(this as m).where.in(m.name, names)
+      selectFrom(this as alias).where.in(alias.name, names)
     }.map(toModel(_))
       .list().apply()
   }
