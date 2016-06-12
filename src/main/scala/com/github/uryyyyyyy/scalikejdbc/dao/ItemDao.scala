@@ -2,10 +2,12 @@ package com.github.uryyyyyyy.scalikejdbc.dao
 
 import java.util.UUID
 
-import scalikejdbc.{autoConstruct, _}
+import scalikejdbc._
+
+case class ItemId(value: String) extends AnyVal
 
 case class Item(
-  id: String,
+  id: ItemId,
   label: String,
   price: BigDecimal
 )
@@ -15,7 +17,9 @@ object ItemDao extends SQLSyntaxSupport[Item] {
   override val columnNames = Seq("id", "label", "price")
   val alias = ItemDao.syntax("i")
 
-  def toModel(rs: WrappedResultSet): Item = autoConstruct(rs, alias.resultName)
+  def toModel(rs: WrappedResultSet): Item = {
+    Item(ItemId(rs.string(column.id)), rs.string(column.label), rs.bigDecimal(column.price))
+  }
 
   def create(label: String, price: BigDecimal)(implicit session: DBSession): Item = {
     val id = UUID.randomUUID().toString
@@ -26,7 +30,7 @@ object ItemDao extends SQLSyntaxSupport[Item] {
         column.price -> price
       )
     }
-    Item(id, label, price)
+    Item(ItemId(id), label, price)
   }
 
   def deleteById(id: String)(implicit session: DBSession): Unit = {
@@ -35,9 +39,9 @@ object ItemDao extends SQLSyntaxSupport[Item] {
     }
   }
 
-  def findById(id: String)(implicit session: DBSession): Option[Item] = {
+  def findById(id: ItemId)(implicit session: DBSession): Option[Item] = {
     withSQL {
-      selectFrom(this as alias).where.eq(alias.id, id)
+      selectFrom(this as alias).where.eq(alias.id, id.value)
     }.map(toModel(_))
       .single.apply()
   }

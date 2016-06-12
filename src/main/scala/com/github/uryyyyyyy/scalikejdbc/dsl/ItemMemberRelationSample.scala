@@ -35,18 +35,18 @@ object ItemMemberRelationSample {
     }
 
     NamedDB(dbName).localTx { implicit session =>
-      ItemMemberRelationDao.create(ma.id, ia.id)
-      ItemMemberRelationDao.create(mb.id, ib.id)
-      ItemMemberRelationDao.create(mb.id, ia.id)
+      ItemMemberRelationDao.create(ma.id, ia.id.value)
+      ItemMemberRelationDao.create(mb.id, ib.id.value)
+      ItemMemberRelationDao.create(mb.id, ia.id.value)
     }
 
     NamedDB(dbName).localTx { implicit session =>
 
-//      val memberIds: Set[Long] = ItemMemberRelationDao.findMemberIds(ia.id)
-//      println(memberIds)
-//
-//      val members: Set[Member] = ItemMemberRelationDao.findMembers(ia.id)
-//      println(members)
+      val memberIds: Set[Long] = ItemMemberRelationDao.findMemberIds(ia.id)
+      println(memberIds)
+
+      val members: Set[Member] = ItemMemberRelationDao.findMembers(ia.id)
+      println(members)
 
       ItemDao.findAll().foreach(println)
       println("start")

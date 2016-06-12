@@ -7,7 +7,7 @@ version := "1.0"
 
 scalaVersion := "2.11.8"
 
-val scalikejdbcVersion = "2.4.1"
+val scalikejdbcVersion = "2.4.2"
 
 val redshiftVersion = "1.1.6.1006"
 val redshiftUrl = s"https://s3.amazonaws.com/redshift-downloads/drivers/RedshiftJDBC41-$redshiftVersion.jar"
@@ -18,7 +18,7 @@ val conf = {
 }
 
 libraryDependencies ++= Seq(
-  "org.scalikejdbc" % "scalikejdbc_2.11" % scalikejdbcVersion,
+  "org.scalikejdbc" %% "scalikejdbc" % scalikejdbcVersion,
   "org.scalikejdbc" %% "scalikejdbc-syntax-support-macro" % scalikejdbcVersion,
   "org.scalikejdbc" %% "scalikejdbc-test" % scalikejdbcVersion,
   "org.scalikejdbc" %% "scalikejdbc-config" % scalikejdbcVersion,

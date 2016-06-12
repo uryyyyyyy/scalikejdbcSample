@@ -28,19 +28,19 @@ object ItemMemberRelationDao extends SQLSyntaxSupport[ItemMemberRelation] {
     }
   }
 
-  def findMemberIds(itemId: String)(implicit session: DBSession): Set[Long] = {
+  def findMemberIds(itemId: ItemId)(implicit session: DBSession): Set[Long] = {
     withSQL {
-      selectFrom(this as alias).where.eq(alias.itemId, itemId)
+      selectFrom(this as alias).where.eq(alias.itemId, itemId.value)
     }.map(rs => rs.long(column.memberId))
       .list().apply().toSet
   }
 
-  def findMembers(itemId: String)(implicit session: DBSession): Set[Member] = {
+  def findMembers(itemId: ItemId)(implicit session: DBSession): Set[Member] = {
     val m = MemberDao.alias
     withSQL {
       selectFrom(this as alias)
         .join(MemberDao as m).on(alias.memberId, m.id)
-        .where.eq(alias.itemId, itemId)
+        .where.eq(alias.itemId, itemId.value)
     }.map(MemberDao.toModel)
       .list().apply().toSet
   }
