@@ -31,6 +31,9 @@ object ItemSample {
 
       val alice = ItemDao.findById(a.id)
       println(alice)
+
+      val res1 = ItemDao.findByPrice(BigDecimal("8.00"), BigDecimal("10.00"))
+      println(res1)
     }
 
   }

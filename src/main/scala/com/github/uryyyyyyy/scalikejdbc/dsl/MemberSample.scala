@@ -26,8 +26,11 @@ object MemberSample {
 
     //check
     NamedDB(dbName).localTx { implicit session =>
-      val members2: Set[Member] = MemberDao.findAll()
-      println(members2)
+      val res0: Set[Member] = MemberDao.findAll()
+      println(res0)
+
+      val res1: Seq[Member] = MemberDao.findByNames(Seq(b.name, c.name))
+      println(res1)
 
       val alice = MemberDao.findById(a.id)
       println(alice)

@@ -56,6 +56,16 @@ object ItemDao extends SQLSyntaxSupport[Item] {
       .list().apply()
   }
 
+  def findByPrice(fromPrice: BigDecimal, toPrice: BigDecimal)(implicit session: DBSession): Seq[Item] = {
+    withSQL {
+      selectFrom(this as i).where
+        .gt(i.price, fromPrice).and
+        .lt(i.price, toPrice)
+        .orderBy(i.price)
+    }.map(toModel(_))
+      .list().apply()
+  }
+
   def truncateTable()(implicit session: DBSession) = {
     SQL(s"TRUNCATE TABLE $tableName").execute.apply()
   }

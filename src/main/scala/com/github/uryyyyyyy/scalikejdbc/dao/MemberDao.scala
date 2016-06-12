@@ -68,6 +68,13 @@ object MemberDao extends SQLSyntaxSupport[Member] {
       .list().apply()
   }
 
+  def findByNames(names: Seq[String])(implicit session: DBSession): Seq[Member] = {
+    withSQL {
+      selectFrom(this as m).where.in(m.name, names)
+    }.map(toModel(_))
+      .list().apply()
+  }
+
   def truncateTable()(implicit session: DBSession) = {
     SQL(s"TRUNCATE TABLE $tableName").execute.apply()
   }
