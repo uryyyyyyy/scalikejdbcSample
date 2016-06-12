@@ -1,7 +1,16 @@
-# sample
+# scalikejdbc-sample
 
 ## setup
 
-import setup.sql
+```
+sbt runtime:flyMigrate
+sbt test:flyMigrate
+```
 
-./acrivator "scalikejdbc-gen relation_article_tag"
+## run
+
+sbt run
+
+## test
+
+sbt test
