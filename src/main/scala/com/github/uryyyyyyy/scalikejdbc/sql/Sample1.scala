@@ -1,6 +1,6 @@
 package com.github.uryyyyyyy.scalikejdbc.sql
 
-import com.github.uryyyyyyy.scalikejdbc.dao.{Member, MemberDao}
+import com.github.uryyyyyyy.scalikejdbc.dao.{Member, MemberDao, MemberTable}
 import org.joda.time.{DateTime, LocalDate}
 import scalikejdbc._
 import scalikejdbc.config.DBs
@@ -13,7 +13,7 @@ object Sample1 {
     DBs.setup(dbName)
 
     NamedDB(dbName).localTx { implicit session =>
-      MemberDao.truncateTable()
+      MemberTable.truncate()
     }
 
     val toMember = (rs: WrappedResultSet) => Member(

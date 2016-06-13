@@ -14,9 +14,9 @@ object ItemMemberRelationSample {
     DBs.setup(dbName)
 
     NamedDB(dbName).localTx { implicit session =>
-      ItemDao.truncateTable()
-      MemberDao.truncateTable()
-      ItemMemberRelationDao.truncateTable()
+      ItemTable.truncate()
+      MemberTable.truncate()
+      ItemMemberRelationTable.truncate()
     }
 
     val (ia, ib, ic) = NamedDB(dbName).localTx { implicit session =>

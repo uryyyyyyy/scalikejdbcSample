@@ -17,7 +17,7 @@ object MemberSample2 {
     DBs.setup(dbName)
 
     NamedDB(dbName).localTx { implicit session =>
-      MemberDao.truncateTable()
+      MemberTable.truncate()
     }
 
     val a = NamedDB(dbName).localTx { implicit session =>

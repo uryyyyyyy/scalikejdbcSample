@@ -7,15 +7,22 @@ case class ItemMemberRelation(
   itemId: String
 )
 
-object ItemMemberRelationDao extends SQLSyntaxSupport[ItemMemberRelation] {
+object ItemMemberRelationTable extends SQLSyntaxSupport[ItemMemberRelation] {
   override val tableName = "item_member_relations"
   override val columnNames = Seq("member_id", "item_id")
-  val alias = ItemMemberRelationDao.syntax("imr")
-  val imr = alias
+
+  def truncate()(implicit session: DBSession) = {
+    SQL(s"TRUNCATE TABLE $tableName").execute.apply()
+  }
+}
+
+trait ItemMemberRelationDao {
+  private val imr = ItemMemberRelationTable.syntax("imr")
+  private val column = ItemMemberRelationTable.column
 
   def create(memberId: Long, itemId: String)(implicit session: DBSession): Unit = {
     applyUpdate {
-      insertInto(this).namedValues(
+      insertInto(ItemMemberRelationTable).namedValues(
         column.memberId -> memberId,
         column.itemId -> itemId
       )
@@ -24,42 +31,40 @@ object ItemMemberRelationDao extends SQLSyntaxSupport[ItemMemberRelation] {
 
   def deleteByItemId(itemId: String)(implicit session: DBSession): Unit = {
     applyUpdate {
-      deleteFrom(this as alias).where.eq(alias.itemId, itemId)
+      deleteFrom(ItemMemberRelationTable as imr).where.eq(imr.itemId, itemId)
     }
   }
 
   def findMemberIds(itemId: ItemId)(implicit session: DBSession): Set[Long] = {
     withSQL {
-      selectFrom(this as alias).where.eq(alias.itemId, itemId.value)
+      selectFrom(ItemMemberRelationTable as imr).where.eq(imr.itemId, itemId.value)
     }.map(rs => rs.long(column.memberId))
       .list().apply().toSet
   }
 
   def findMembers(itemId: ItemId)(implicit session: DBSession): Set[Member] = {
-    val m = MemberDao.alias
+    val m = MemberTable.syntax("m")
     withSQL {
-      selectFrom(this as alias)
-        .join(MemberDao as m).on(alias.memberId, m.id)
-        .where.eq(alias.itemId, itemId.value)
-    }.map(MemberDao.toModel)
+      selectFrom(ItemMemberRelationTable as imr)
+        .join(MemberTable as m).on(imr.memberId, m.id)
+        .where.eq(imr.itemId, itemId.value)
+    }.map(MemberTable(m))
       .list().apply().toSet
   }
 
   def findItems(memberId: Long)(implicit session: DBSession): Set[Item] = {
-    val i = ItemDao.alias
+    val i = ItemTable.syntax("i")
 
-    val sub = select(imr.itemId).from(this as imr)
+    val sub = select(imr.itemId).from(ItemMemberRelationTable as imr)
       .where.eq(imr.memberId, memberId)
       .and.eq(i.id, imr.itemId)
 
     withSQL {
-      selectFrom(ItemDao as i)
+      selectFrom(ItemTable as i)
         .where.exists(sub)
-    }.map(ItemDao.toModel)
+    }.map(ItemTable(i))
       .list().apply().toSet
   }
-
-  def truncateTable()(implicit session: DBSession) = {
-    SQL(s"TRUNCATE TABLE $tableName").execute.apply()
-  }
 }
+
+object ItemMemberRelationDao extends ItemMemberRelationDao

@@ -16,7 +16,7 @@ class ItemDaoTest extends fixture.FunSpec with MustMatchers with AutoRollback {
   }
 
   override def fixture(implicit session: DBSession): Unit = {
-    ItemDao.truncateTable()
+    ItemTable.truncate()
 
     ItemDao.create("Apple", BigDecimal("11.1111111"))
     ItemDao.create("Banana", BigDecimal("9.9999999999"))

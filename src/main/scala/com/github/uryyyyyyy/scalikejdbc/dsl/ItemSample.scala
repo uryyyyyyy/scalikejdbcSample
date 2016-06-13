@@ -13,7 +13,7 @@ object ItemSample {
     DBs.setup(dbName)
 
     NamedDB(dbName).localTx { implicit session =>
-      ItemDao.truncateTable()
+      ItemTable.truncate()
     }
 
     val (a, b, c) = NamedDB(dbName).localTx { implicit session =>
