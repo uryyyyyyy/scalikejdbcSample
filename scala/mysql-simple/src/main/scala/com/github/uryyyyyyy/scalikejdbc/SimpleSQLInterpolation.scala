@@ -1,4 +1,4 @@
-package com.github.uryyyyyyy.scalikejdbc.sql
+package com.github.uryyyyyyy.scalikejdbc
 
 import scalikejdbc._
 
