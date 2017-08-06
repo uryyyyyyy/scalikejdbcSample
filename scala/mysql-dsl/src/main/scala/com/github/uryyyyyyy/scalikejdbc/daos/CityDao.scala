@@ -58,28 +58,28 @@ object CityDaoImpl extends CityDao {
 
   override def findById(id: Long)(implicit session: DBSession): Option[City] = {
     withSQL {
-      select(c.*).from(CityTable as c).where.eq(c.id, id)
-    }.map(CityTable(c)).single.apply()
+      select(c.result.*).from(CityTable as c).where.eq(c.id, id)
+    }.map(CityTable(c.resultName)).single.apply()
   }
 
   override def findAll()(implicit session: DBSession): Set[City] = {
     withSQL {
-      select(c.*).from(CityTable as c)
-    }.map(CityTable(c))
+      select(c.result.*).from(CityTable as c)
+    }.map(CityTable(c.resultName))
       .list().apply().toSet
   }
 
   override def findAllOrderedById()(implicit session: DBSession): Seq[City] = {
     withSQL {
-      select(c.*).from(CityTable as c).orderBy(c.id)
-    }.map(CityTable(c))
+      select(c.result.*).from(CityTable as c).orderBy(c.id)
+    }.map(CityTable(c.resultName))
       .list().apply()
   }
 
   override def findByNames(names: Seq[String])(implicit session: DBSession): Seq[City] = {
     withSQL {
-      select(c.*).from(CityTable as c).where.in(c.name, names)
-    }.map(CityTable(c))
+      select(c.result.*).from(CityTable as c).where.in(c.name, names)
+    }.map(CityTable(c.resultName))
       .list().apply()
   }
 }

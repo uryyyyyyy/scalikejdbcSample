@@ -1,6 +1,6 @@
 package com.github.uryyyyyyy.scalikejdbc.daos
 
-import com.github.uryyyyyyy.scalikejdbc.tables.{City, CityTable, Country, CountryTable}
+import com.github.uryyyyyyy.scalikejdbc.tables.{Country, CountryTable}
 import scalikejdbc._
 
 trait CountryDao {
@@ -24,7 +24,6 @@ object CountryDaoImpl extends CountryDao {
   override def findById(code: String)(implicit session: DBSession): Option[Country] = {
     withSQL {
       select(co.*).from(CountryTable as co).where.eq(co.code, code)
-    }.map(CountryTable(co)).single.apply()
+    }.map(CountryTable(co.resultName)).single.apply()
   }
-
 }

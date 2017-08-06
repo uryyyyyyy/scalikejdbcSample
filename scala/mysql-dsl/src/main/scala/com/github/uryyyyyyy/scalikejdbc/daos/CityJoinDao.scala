@@ -20,12 +20,12 @@ object CityJoinDaoImpl extends CityJoinDao {
 
   override def findById(id: Long)(implicit session: DBSession): Option[CityWithCountry] = {
     withSQL {
-      select(c.*, co.name).from(CityTable as c).innerJoin(CountryTable as co).on(c.countryCode, co.code)
+      select(c.result.*, co.result.name).from(CityTable as c).innerJoin(CountryTable as co).on(c.countryCode, co.code)
         .where.eq(c.id, id)
-    }.map(toCityWithCountry(c, co)).single.apply()
+    }.map(toCityWithCountry(c.resultName, co.resultName)).single.apply()
   }
 
-  def toCityWithCountry(c: SyntaxProvider[City], co: SyntaxProvider[Country])(rs: WrappedResultSet) = CityWithCountry(
+  def toCityWithCountry(c: ResultName[City], co: ResultName[Country])(rs: WrappedResultSet) = CityWithCountry(
     id = rs.long(c.id),
     name = rs.string(c.name),
     countryName = rs.string(co.name),

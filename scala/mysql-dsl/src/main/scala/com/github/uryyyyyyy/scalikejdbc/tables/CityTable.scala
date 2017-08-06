@@ -15,7 +15,7 @@ object CityTable extends SQLSyntaxSupport[City] {
   override val tableName = "city"
   override val columnNames = Seq("id", "name", "country_code", "created_at_date", "created_at_timestamp")
 
-  def apply(m: SyntaxProvider[City])(rs: WrappedResultSet): City = City(
+  def apply(m: ResultName[City])(rs: WrappedResultSet): City = City(
     rs.long(m.id),
     rs.string(m.name),
     rs.string(m.countryCode),
