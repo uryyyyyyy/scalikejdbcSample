@@ -26,59 +26,59 @@ object MemberDaoImpl extends MemberDao {
   private val column = MemberTable.column
 
   override def create(name: String, birthday: Option[LocalDate], createdAt: DateTime)(implicit session: DBSession): Member = {
-    val id = applyUpdateAndReturnGeneratedKey {
+    val id = withSQL{
       insert.into(MemberTable).namedValues(
         column.name -> name,
         column.birthday -> birthday,
         column.createdAt -> createdAt
       )
-    }
+    }.updateAndReturnGeneratedKey.apply()
+
     Member(id, name, birthday, createdAt)
   }
 
   override def updateAllStatus(member: Member)(implicit session: DBSession): Unit = {
-    val isSuccess = applyUpdate {
+    val updatedNum = withSQL {
       update(MemberTable).set(
         column.name -> member.name,
         column.birthday -> member.birthday
       ).where.eq(column.id, member.id)
-    } > 0
+    }.update.apply()
 
-    if(!isSuccess){
+    if(updatedNum == 0){
       throw new RuntimeException("update faild. member:" + member.toString)
     }
   }
 
   override def deleteById(id: Long)(implicit session: DBSession): Unit = {
-    applyUpdate {
-      delete.from(MemberTable as m).where.eq(m.id, id)
-    }
+    withSQL {
+      delete.from(MemberTable).where.eq(column.id, id)
+    }.update.apply()
   }
 
   override def findById(id: Long)(implicit session: DBSession): Option[Member] = {
     withSQL {
-      select.from(MemberTable as m).where.eq(m.id, id)
-    }.map(MemberTable(m))
-      .single.apply()
+      select(m.*).from(MemberTable as m).where.eq(m.id, id)
+    }.map(MemberTable(m)).single.apply()
   }
 
   override def findAll()(implicit session: DBSession): Set[Member] = {
     withSQL {
-      selectFrom(MemberTable as m)
+      select(m.*).from(MemberTable as m)
     }.map(MemberTable(m))
       .list().apply().toSet
   }
 
   override def findAllOrderedById()(implicit session: DBSession): Seq[Member] = {
     withSQL {
-      selectFrom(MemberTable as m).orderBy(m.id)
+      select(m.*).from(MemberTable as m).orderBy(m.id)
     }.map(MemberTable(m))
       .list().apply()
   }
 
   override def findByNames(names: Seq[String])(implicit session: DBSession): Seq[Member] = {
     withSQL {
-      selectFrom(MemberTable as m).where.in(m.name, names)
+      select(m.*).from(MemberTable as m).where.in(m.name, names)
     }.map(MemberTable(m))
       .list().apply()
   }

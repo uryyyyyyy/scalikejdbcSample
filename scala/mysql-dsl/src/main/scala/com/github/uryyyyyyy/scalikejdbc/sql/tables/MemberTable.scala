@@ -15,10 +15,10 @@ object MemberTable extends SQLSyntaxSupport[Member] {
   override val columnNames = Seq("id", "name", "birthday", "created_at")
 
   def apply(m: SyntaxProvider[Member])(rs: WrappedResultSet): Member = Member(
-    rs.long(m.resultName.id),
-    rs.string(m.resultName.name),
-    rs.jodaLocalDateOpt(m.resultName.birthday),
-    rs.jodaDateTime(m.resultName.createdAt)
+    rs.long(m.id),
+    rs.string(m.name),
+    rs.jodaLocalDateOpt(m.birthday),
+    rs.jodaDateTime(m.createdAt)
   )
 
   def truncate()(implicit session: DBSession) = {
