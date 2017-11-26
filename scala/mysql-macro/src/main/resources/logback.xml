@@ -1,0 +1,23 @@
+<configuration>
+
+    <property name="ROOT_LEVEL" value="DEBUG"/>
+    <property name="LOG_HOME" value="logs"/>
+
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_HOME}/application.log</file>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/application.%d{yyyy-MM-dd}.log.gz</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+
+        <encoder>
+            <pattern>%date [%level] [%logger{15}] %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <root level="${ROOT_LEVEL}">
+        <appender-ref ref="FILE"/>
+    </root>
+
+</configuration>

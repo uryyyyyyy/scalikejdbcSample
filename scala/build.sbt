@@ -28,6 +28,19 @@ val mysqlDsl = (project in file("mysql-dsl"))
     )
   ).enablePlugins(JavaAppPackaging)
 
+val mysqlMacro = (project in file("mysql-macro"))
+  .settings(
+    scalaVersion := "2.12.3",
+    libraryDependencies ++= Seq(
+      "org.scalikejdbc" %% "scalikejdbc" % scalikejdbcVersion,
+      "org.scalikejdbc" %% "scalikejdbc-test" % scalikejdbcVersion % Test,
+      "org.scalikejdbc" %% "scalikejdbc-config" % scalikejdbcVersion,
+      "org.scalikejdbc" %% "scalikejdbc-syntax-support-macro" % scalikejdbcVersion,
+      "mysql" % "mysql-connector-java" % "6.0.6",
+      "ch.qos.logback"  %  "logback-classic"   % "1.2.3"
+    )
+  ).enablePlugins(JavaAppPackaging)
+
 val bigquerySimple = (project in file("bigquery-simple"))
   .settings(
     scalaVersion := "2.12.3",
