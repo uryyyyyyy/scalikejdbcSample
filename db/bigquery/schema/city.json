@@ -1,0 +1,32 @@
+[
+  {
+    "description": "ID",
+    "mode": "REQUIRED",
+    "name": "id",
+    "type": "INTEGER"
+  },
+  {
+    "description": "name",
+    "mode": "REQUIRED",
+    "name": "name",
+    "type": "STRING"
+  },
+  {
+    "description": "country_code",
+    "mode": "REQUIRED",
+    "name": "country_code",
+    "type": "STRING"
+  },
+  {
+    "description": "created_at_date",
+    "mode": "NULLABLE",
+    "name": "created_at_date",
+    "type": "DATE"
+  },
+  {
+    "description": "created_at_timestamp",
+    "mode": "REQUIRED",
+    "name": "created_at_timestamp",
+    "type": "TIMESTAMP"
+  }
+]
